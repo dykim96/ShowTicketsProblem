@@ -4,16 +4,23 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.Random;
 
 class ThreadedTicketClient implements Runnable {
-	String hostname = "127.0.0.1";
-	String threadname = "X";
-	TicketClient sc;
+	private String hostname = "127.0.0.1";
+	private String threadname = "X";
+	private TicketClient sc;
+	private boolean soldOut;
+	private String seat;
+	private boolean reservedASeat;
 
 	public ThreadedTicketClient(TicketClient sc, String hostname, String threadname) {
 		this.sc = sc;
 		this.hostname = hostname;
 		this.threadname = threadname;
+		soldOut = false;
+		seat = "";
+		reservedASeat = false;
 	}
 
 	public void run() {
