@@ -142,6 +142,16 @@ class ThreadedTicketServer implements Runnable {
 						}
 					}
 				}
+				//try reserving the seat
+				else{
+					boolean markSuccessful = markAvailableSeatTaken(command);
+					if(markSuccessful){
+						out.println("success");//mark the seat
+					}
+					else{
+						out.println("failed");
+					}
+				}
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -153,5 +163,19 @@ class ThreadedTicketServer implements Runnable {
 		if(!seatQueue.isEmpty())
 			return seatQueue.peek();
 		return "-1";
+	}
+	
+	synchronized boolean markAvailableSeatTaken(String seat){
+		//check for availability
+		if(seatQueue.size() > 0 && seatQueue.peek().equals(seat)){
+			//mark the seat
+			String splt[] = seat.split(" ");
+			int alphabet = (int)(splt[0].charAt(0) - 'A');
+			int number = Integer.parseInt(splt[1]) - 101;
+			theaterSeats[alphabet][number] = false;
+			seatQueue.remove();
+			return true;
+		}
+		return false;
 	}
 }
