@@ -119,13 +119,39 @@ class ThreadedTicketServer implements Runnable {
 		ServerSocket serverSocket;
 		try {
 			serverSocket = new ServerSocket(TicketServer.PORT);
-			Socket clientSocket = serverSocket.accept();
-			PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
-			BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+			while(true){
+				Socket clientSocket = serverSocket.accept();
+				PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+				BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+				
+				String user = in.readLine();
+				//track different boxOffices
+				if(!boxOffice.contains(user))
+					addBoxOffice(user);//register new office
+				String command = in.readLine();
+				//get best available seat
+				if(command.equals("bestAvailableSeat")){
+					//seat will be -1 if there's none left
+					String seat = bestAvailableSeat();
+					out.println(seat);
+					//all seats are sold, so tell boxOffice that there's no seat
+					if (seatQueue.size() == 0){
+						removeBoxOffice(user);
+						if(boxOffice.size() == 0){
+							break;
+						}
+					}
+				}
+			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
+	}
+	
+	String bestAvailableSeat(){
+		if(!seatQueue.isEmpty())
+			return seatQueue.peek();
+		return "-1";
 	}
 }
