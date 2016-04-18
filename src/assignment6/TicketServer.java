@@ -62,6 +62,56 @@ class ThreadedTicketServer implements Runnable {
 				theaterSeats[i][j] = true;
 			}
 		}
+		resetSeatQueue(seatQueue);
+	}
+	
+	//synchronized box office ArrayList adder
+	synchronized void addBoxOffice(String booth){
+		boxOffice.add(booth);
+	}
+
+	//synchronized box office ArrayList remover
+	synchronized void removeBoxOffice(String booth){
+		boxOffice.remove(booth);
+	}
+	
+	private void resetSeatQueue(Queue<String> seats){
+		//add front center
+		for(char row = 'A'; row <= 'M'; row++){
+			for(int i = 108; i <= 121; i++){
+				seats.add(row + " " + i);
+			}
+		}
+		//add front left
+		for(char row = 'A'; row <= 'M'; row++){
+			for(int i = 101; i <= 107; i++){
+				seats.add(row + " " + i);
+			}
+		}
+		//add front right
+		for(char row = 'A'; row <= 'M'; row++){
+			for(int i = 122; i <= 128; i++){
+				seats.add(row + " " + i);
+			}
+		}
+		//add back center
+		for(char row = 'N'; row <= 'Z'; row++){
+			for(int i = 108; i <= 121; i++){
+				seats.add(row + " " + i);
+			}
+		}
+		//add back left
+		for(char row = 'N'; row <= 'Z'; row++){
+			for(int i = 101; i <= 107; i++){
+				seats.add(row + " " + i);
+			}
+		}
+		//add back right
+		for(char row = 'N'; row <= 'Z'; row++){
+			for(int i = 122; i <= 128; i++){
+				seats.add(row + " " + i);
+			}
+		}
 	}
 
 	public void run() {
