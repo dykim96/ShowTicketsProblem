@@ -15,6 +15,9 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class TicketServer {
 	static int PORT = 2222;
@@ -32,10 +35,34 @@ public class TicketServer {
 
 class ThreadedTicketServer implements Runnable {
 
-	String hostname = "127.0.0.1";
-	String threadname = "X";
-	String testcase;
-	TicketClient sc;
+	private String hostname;
+	private String threadname;
+	private String testcase;
+	private TicketClient sc;
+	//Seat goes from A to Z and 101 to 128
+	//
+	//A to M are front
+	//N to Z are back
+	//101 to 107 are left
+	//108 to 121 are center
+	//122 to 128 are right
+	//
+	//priority: front center > front side > back center > back side
+	private boolean theaterSeats[][];
+	private Queue<String> seatQueue;
+	private ArrayList<String> boxOffice = new ArrayList<String>();
+	
+	public ThreadedTicketServer(){
+		hostname = "127.0.0.1";
+		threadname = "X";
+		theaterSeats = new boolean[26][28];
+		seatQueue = new LinkedList<String>();
+		for(int i = 0; i < theaterSeats.length; i++){
+			for(int j = 0; j < theaterSeats[i].length; j++){
+				theaterSeats[i][j] = true;
+			}
+		}
+	}
 
 	public void run() {
 		// TODO 422C

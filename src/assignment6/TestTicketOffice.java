@@ -38,8 +38,7 @@ public class TestTicketOffice {
 		TicketClient client1 = new TicketClient("localhost", "c1");
 		TicketClient client2 = new TicketClient("localhost", "c2");
 		client1.requestTicket();
-		client2.requestTicket();
-		
+		client2.requestTicket();	
 	}
 
 	@Test
