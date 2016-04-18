@@ -20,7 +20,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public class TicketServer {
-	static int PORT = 2222;
+	static int PORT = 4229;
 	// EE422C: no matter how many concurrent requests you get,
 	// do not have more than three servers running concurrently
 	final static int MAXPARALLELTHREADS = 3;
