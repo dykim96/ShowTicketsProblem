@@ -142,6 +142,15 @@ class ThreadedTicketServer implements Runnable {
 						}
 					}
 				}
+				else if(command.substring(0, 5).equals("print")){
+					//convert seat coordinate to alphabet and number
+					String splt[] = command.split(" ");
+					char alphabet = splt[1].charAt(0);
+					int number = Integer.parseInt(splt[2]);
+					System.out.println(printTicketSeat(alphabet, number) + "\nFor Box Office " + user + ": " + alphabet + " " + number);
+					sleep(500);//show the ticket for .5 seconds
+					//out.println("Disconnect with client");
+				}
 				//try reserving the seat
 				else{
 					boolean markSuccessful = markAvailableSeatTaken(command);
@@ -177,5 +186,37 @@ class ThreadedTicketServer implements Runnable {
 			return true;
 		}
 		return false;
+	}
+	
+	synchronized String printTicketSeat(char seatAlphabet, int seatNumber){
+		String seatingMap = "--Back of the stage--";
+		for(int i = theaterSeats.length - 1; i >= 0; i--){
+			char seat = (char)(i + 'A');
+			seatingMap += "\n" + seat + "|";
+			for(int j = theaterSeats[i].length - 1; j >= 0; j--){
+				//indicate marked seat
+				if(seat == seatAlphabet && seatNumber == j + 101){
+					seatingMap += "VVV|";
+				}
+				//if seat is not available
+				else if(!theaterSeats[i][j]){
+					seatingMap += "OUT|";
+				}
+				//if seat is still available
+				else{
+					seatingMap += (j + 101) + "|";
+				}
+			}
+		}
+		seatingMap += "\n--Front of the stage--";
+		return seatingMap;
+	}
+	
+	void sleep(int milliSecond) {
+		try {
+			Thread.sleep(milliSecond);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 }
