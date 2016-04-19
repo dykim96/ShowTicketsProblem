@@ -1,12 +1,3 @@
-/*  Assignment 6: Show Tickets Problem
- *  Create ticket services by using multi-threaded ticket clients
- *  and connect them with server using network
- *  Section: 16185
- *  Name: Doyoung Kim
- *  UTEID: dk24338
- *  Name: Connor Lewis
- *  UTEID: csl735
- */
 package assignment6;
 
 import java.io.BufferedReader;
@@ -91,15 +82,18 @@ class ThreadedTicketClient implements Runnable {
 }
 
 public class TicketClient {
-	ThreadedTicketClient tc;
-	String result = "dummy";
-	String hostName = "";
-	String threadName = "";
+	private ThreadedTicketClient tc;
+	private String hostName = "";
+	private String threadName = "";
+	private int lineLength = 0;
+	private Random rand;
 
 	TicketClient(String hostname, String threadname) {
 		tc = new ThreadedTicketClient(this, hostname, threadname);
 		hostName = hostname;
 		threadName = threadname;
+		rand = new Random();
+		lineLength = rand.nextInt(901) + 100;
 	}
 
 	TicketClient(String name) {
@@ -110,10 +104,14 @@ public class TicketClient {
 		this("localhost", "unnamed client");
 	}
 
-	void requestTicket() {
+	boolean requestTicket() {
 		// TODO thread.run()
+		if(lineLength <= 0){
+			lineLength = rand.nextInt(901) + 100;
+		}
 		tc.run();
-		System.out.println(hostName + "," + threadName + " got one ticket");
+		//System.out.println(hostName + "," + threadName + " got one ticket");
+		return tc.isSoldOut();
 	}
 
 	void sleep() {
