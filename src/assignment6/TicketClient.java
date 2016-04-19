@@ -26,15 +26,58 @@ class ThreadedTicketClient implements Runnable {
 	public void run() {
 		System.out.flush();
 		try {
-			Socket echoSocket = new Socket(hostname, TicketServer.PORT);
-			// PrintWriter out =
-			new PrintWriter(echoSocket.getOutputStream(), true);
-			BufferedReader in = new BufferedReader(new InputStreamReader(echoSocket.getInputStream()));
-			BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
-			echoSocket.close();
+			//run until successfully reserving a seat or until there's no more seat
+			while(!reservedASeat && !soldOut){
+				Socket echoSocket = new Socket(hostname, TicketServer.PORT);
+				PrintWriter out = new PrintWriter(echoSocket.getOutputStream(), true);
+				BufferedReader in = new BufferedReader(new InputStreamReader(echoSocket.getInputStream()));
+				BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
+				out.println(threadname);
+				//get best available seat
+				if(seat.isEmpty()){
+					out.println("bestAvailableSeat");
+					String answer = in.readLine();
+					//when first answer is -1, this means there's no seat left
+					if(answer.equals("-1")){
+						soldOut = true;
+						System.out.println("Box Office " + threadname + ": sorry, we are sold out");
+					}
+					//since there is/are seat(s) left, continue
+					else{
+						soldOut = false;
+						seat = answer;
+						System.out.println("Box Office " + threadname + ": Best available seat is " + seat);
+					}
+				}
+				//print the ticket
+				else if(seat.substring(0, 5).equals("print")){
+					out.println(seat);
+					seat = "";
+					reservedASeat = true;
+				}
+				//reserve the seat
+				else{
+					out.println(seat);
+					String answer = in.readLine();
+					if(answer.equals("success")){
+						System.out.println("Box Office " + threadname + ": Reserved HR, " + seat);
+						seat = "print " + seat;
+					}
+					else{
+						System.out.println("Box Office " + threadname + ": Failed to reserve HR, " + seat);
+						seat = "";
+					}
+				}
+				echoSocket.close();
+			}
+			reservedASeat = false;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	boolean isSoldOut(){
+		return soldOut;
 	}
 }
 
