@@ -13,6 +13,8 @@ Test: TestTicketOffice.java
 Client: TicketClient.java
 
 Server: TicketServer.java
+//change 500 in or comment out sleep(500) in run method inside TicketServer.java to speed up the test
+//sleep(500) is .5second delay to show seating charts for the client
 
 //Seat goes from A to Z and 101 to 128
 //
