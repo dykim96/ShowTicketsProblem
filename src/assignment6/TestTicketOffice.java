@@ -1,12 +1,3 @@
-/*  Assignment 6: Show Tickets Problem
- *  Create ticket services by using multi-threaded ticket clients
- *  and connect them with server using network
- *  Section: 16185
- *  Name: Doyoung Kim
- *  UTEID: dk24338
- *  Name: Connor Lewis
- *  UTEID: csl735
- */
 package assignment6;
 
 import static org.junit.Assert.fail;
@@ -38,7 +29,7 @@ public class TestTicketOffice {
 		TicketClient client1 = new TicketClient("localhost", "c1");
 		TicketClient client2 = new TicketClient("localhost", "c2");
 		client1.requestTicket();
-		client2.requestTicket();	
+		client2.requestTicket();
 	}
 
 	@Test
@@ -52,6 +43,10 @@ public class TestTicketOffice {
 		TicketClient c2 = new TicketClient("nonconc2");
 		TicketClient c3 = new TicketClient("nonconc3");
 		c1.requestTicket();
+		c2.requestTicket();
+		c3.requestTicket();
+		while(!c1.requestTicket()){
+		}
 		c2.requestTicket();
 		c3.requestTicket();
 	}
@@ -68,17 +63,20 @@ public class TestTicketOffice {
 		final TicketClient c3 = new TicketClient("conc3");
 		Thread t1 = new Thread() {
 			public void run() {
-				c1.requestTicket();
+				while(!c1.requestTicket()){
+				}
 			}
 		};
 		Thread t2 = new Thread() {
 			public void run() {
-				c2.requestTicket();
+				while(!c2.requestTicket()){
+				}
 			}
 		};
 		Thread t3 = new Thread() {
 			public void run() {
-				c3.requestTicket();
+				while(!c3.requestTicket()){
+				}
 			}
 		};
 		t1.start();
