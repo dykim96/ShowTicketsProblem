@@ -1,3 +1,12 @@
+/*  Assignment 6: Show Tickets Problem
+ *  Create ticket services by using multi-threaded ticket clients
+ *  and connect them with server using network
+ *  Section: 16185
+ *  Name: Doyoung Kim
+ *  UTEID: dk24338
+ *  Name: Connor Lewis
+ *  UTEID: csl735
+ */
 package assignment6;
 
 import static org.junit.Assert.fail;
@@ -29,8 +38,7 @@ public class TestTicketOffice {
 		TicketClient client1 = new TicketClient("localhost", "c1");
 		TicketClient client2 = new TicketClient("localhost", "c2");
 		client1.requestTicket();
-		client2.requestTicket();
-		
+		client2.requestTicket();	
 	}
 
 	@Test
